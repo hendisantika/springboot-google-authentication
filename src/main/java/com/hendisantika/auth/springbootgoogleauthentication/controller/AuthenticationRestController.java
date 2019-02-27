@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -34,7 +31,7 @@ public class AuthenticationRestController {
     @Autowired
     private TotpService totpService;
 
-    @RequestMapping(value = "{login}/{password}", method = RequestMethod.POST)
+    @PostMapping("{login}/{password}")
     public AuthenticationStatus authenticate(@PathVariable String login, @PathVariable String password) {
         Optional<User> user = userService.findUser(login, password);
 
@@ -51,7 +48,7 @@ public class AuthenticationRestController {
         }
     }
 
-    @RequestMapping("token/{login}/{password}/{token}")
+    @GetMapping("token/{login}/{password}/{token}")
     public AuthenticationStatus tokenCheck(@PathVariable String login, @PathVariable String password, @PathVariable String token) {
         Optional<User> user = userService.findUser(login, password);
 
@@ -69,7 +66,7 @@ public class AuthenticationRestController {
         return AuthenticationStatus.AUTHENTICATED;
     }
 
-    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    @PostMapping("/logout")
     public void logout() {
         SecurityContextHolder.clearContext();
     }
